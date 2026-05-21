@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from environs import Env
 
+from . import jazzmin
+
 env = Env()
 env.read_env()
 
@@ -37,13 +39,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
+    # 3rd parties apps
+    "import_export",
 
     # local apps
     'base',
@@ -130,7 +136,19 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+
+#jazzmin
+JAZZMIN_SETTINGS = jazzmin.JAZZMIN_SETTINGS
+JAZZMIN_UI_TWEAKS = jazzmin.JAZZMIN_UI_TWEAKS
