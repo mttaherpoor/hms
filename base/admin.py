@@ -58,5 +58,5 @@ class PrescriptionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Billing)
 class BillingAdmin(admin.ModelAdmin):
-    list_display = ['patient', 'total', 'status', 'date']
+    list_display = ['patient', 'total', 'status', 'datetime_created']
 
