@@ -159,3 +159,8 @@ JAZZMIN_UI_TWEAKS = jazzmin.JAZZMIN_UI_TWEAKS
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+
+# Bootstrap Configs
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
