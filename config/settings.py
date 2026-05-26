@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from environs import Env
+from django.contrib.messages import constants as messages
 
 from . import jazzmin
 
@@ -152,3 +153,9 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 #jazzmin
 JAZZMIN_SETTINGS = jazzmin.JAZZMIN_SETTINGS
 JAZZMIN_UI_TWEAKS = jazzmin.JAZZMIN_UI_TWEAKS
+
+
+# Alert Messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
