@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-USER_TYPE = (
-    ('doc' , 'Doctor'),
-    ('pat', 'Patient')
-)
+
+class UserType(models.TextChoices):
+    DOCTOR = "doc", "Doctor"
+    PATIENT = "pat", "Patient"
 
 
 class CustomUser(AbstractUser):
@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=50, null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
 
-    user_type = models.CharField(max_length=3, choices=USER_TYPE, blank=True)
+    user_type = models.CharField(max_length=3, choices=UserType.choices, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
