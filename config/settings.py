@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     
     # 3rd parties apps
     "import_export",
+    "crispy_forms",
+    "crispy_bootstrap5",
 
     # local apps
     'base',
@@ -145,8 +147,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 

@@ -1,128 +1,88 @@
 # config/jazzmin.py
 
+# =========================
+# JAZZMIN SETTINGS
+# =========================
+
 JAZZMIN_SETTINGS = {
 
-    # ---------------------------------------------------
-    # General
-    # ---------------------------------------------------
+    # -------------------------
+    # BRANDING
+    # -------------------------
     "site_title": "HMS Admin",
-    "site_header": "HMS",
-    "site_brand": "Hospital Management System",
-    "site_logo": None,
-    "login_logo": None,
-    "welcome_sign": "Welcome to HMS Admin Panel",
+    "site_header": "Hospital Management",
+    "site_brand": "HMS",
+    "welcome_sign": "Welcome to Hospital Admin Panel",
     "copyright": "HMS",
 
-    # ---------------------------------------------------
-    # Top Menu
-    # ---------------------------------------------------
-    "topmenu_links": [
+    # -------------------------
+    # LOGO
+    # -------------------------
+    "site_logo": None,
+    "login_logo": None,
+    "site_logo_classes": "img-circle",
 
-        # Home
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-
-        # External link
-        {
-            "name": "GitHub",
-            "url": "https://github.com",
-            "new_window": True,
-        },
-
-        # App dropdown
-        {"app": "auth"},
-    ],
-
-    # ---------------------------------------------------
-    # User Menu
-    # ---------------------------------------------------
-    "usermenu_links": [
-        {
-            "name": "Support",
-            "url": "https://github.com",
-            "new_window": True,
-        },
-    ],
-
-    # ---------------------------------------------------
-    # Side Menu
-    # ---------------------------------------------------
+    # -------------------------
+    # UI BEHAVIOR
+    # -------------------------
     "show_sidebar": True,
     "navigation_expanded": True,
+    "related_modal_active": True,
+
+    # IMPORTANT (fix user dropdown issues)
+    "show_ui_builder": False,
+
+    # -------------------------
+    # TOP MENU
+    # -------------------------
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index"},
+        {"name": "Website", "url": "/", "new_window": True},
+    ],
+
+    # -------------------------
+    # USER MENU (IMPORTANT)
+    # -------------------------
+    # Keep empty → Django/Jazzmin will auto-add:
+    # Profile / Change Password / Logout
+    "usermenu_links": [],
+
+    # -------------------------
+    # SIDEBAR CONTROL
+    # -------------------------
     "hide_apps": [],
     "hide_models": [],
 
-    # ---------------------------------------------------
-    # Order Apps / Models
-    # ---------------------------------------------------
     "order_with_respect_to": [
         "auth",
         "auth.user",
         "auth.Group",
     ],
 
-    # ---------------------------------------------------
-    # Icons
-    # ---------------------------------------------------
+    # -------------------------
+    # ICONS
+    # -------------------------
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
 
-        # Example apps
         "doctor.Doctor": "fas fa-user-md",
         "patient.Patient": "fas fa-procedures",
     },
 
-    # ---------------------------------------------------
-    # Default Icons
-    # ---------------------------------------------------
-    "default_icon_parents": "fas fa-folder",
-    "default_icon_children": "fas fa-circle",
-
-    # ---------------------------------------------------
-    # Related Modal
-    # ---------------------------------------------------
-    "related_modal_active": True,
-
-    # ---------------------------------------------------
-    # Custom CSS / JS
-    # ---------------------------------------------------
-    "custom_css": None,
-    "custom_js": None,
-
-    # ---------------------------------------------------
-    # Change Form
-    # ---------------------------------------------------
+    # -------------------------
+    # CHANGEFORM STYLE
+    # -------------------------
     "changeform_format": "horizontal_tabs",
-
-    # Options:
-    # single
-    # horizontal_tabs
-    # vertical_tabs
-    # collapsible
-    # carousel
-
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-    },
-
-    # ---------------------------------------------------
-    # Language / Theme
-    # ---------------------------------------------------
-    # "language_chooser": True,
 }
-
-
-# -------------------------------------------------------
-# UI Tweaks
-# -------------------------------------------------------
 
 JAZZMIN_UI_TWEAKS = {
 
     # ---------------------------------------------------
     # Theme
     # ---------------------------------------------------
-    "theme": "flatly",
+    "theme": "cerulean",
 
     # Available themes:
     # cerulean
@@ -146,54 +106,25 @@ JAZZMIN_UI_TWEAKS = {
     # superhero
     # united
     # yeti
-
-    # ---------------------------------------------------
-    # Navbar
-    # ---------------------------------------------------
-    "navbar_small_text": False,
+ 
+  # Navbar
+    "navbar": "navbar-dark bg-primary",
     "navbar_fixed": True,
-    "navbar": "navbar-dark navbar-primary",
 
-    # ---------------------------------------------------
-    # Footer
-    # ---------------------------------------------------
-    "footer_small_text": False,
-
-    # ---------------------------------------------------
-    # Body
-    # ---------------------------------------------------
-    "body_small_text": False,
-    "body_navbar_fixed": True,
-    "body_footer_fixed": False,
-
-    # ---------------------------------------------------
     # Sidebar
-    # ---------------------------------------------------
-    "sidebar_nav_small_text": False,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": True,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
     "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_child_indent": True,
 
-    # ---------------------------------------------------
-    # Brand
-    # ---------------------------------------------------
-    "brand_small_text": False,
-    "brand_colour": "navbar-primary",
+    # Layout
+    "body_small_text": False,
+    "sidebar_nav_small_text": False,
 
-    # ---------------------------------------------------
     # Accent
-    # ---------------------------------------------------
     "accent": "accent-primary",
 
-    # ---------------------------------------------------
-    # Buttons
-    # ---------------------------------------------------
-    "actions_sticky_top": False,
+    # Footer
+    "footer_small_text": False,
 
-    # ---------------------------------------------------
-    # Dark Mode
-    # ---------------------------------------------------
+    # Dark mode
     "default_theme_mode": "auto",
 }

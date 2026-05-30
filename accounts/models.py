@@ -12,10 +12,10 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=50, null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
 
-    user_type = models.CharField(max_length=3, choices=UserType.choices, blank=True)
+    user_type = models.CharField(max_length=3, choices=UserType.choices)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'user_type']
 
     def __str__(self:AbstractUser) -> str:
         return self.username
