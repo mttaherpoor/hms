@@ -10,23 +10,28 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['username', 'email', 'age', 'is_staff',]
+    list_display = ['username', 'email', 'age', 'user_type', 'is_staff',]
 
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields':('age',)}),
+        (None, {'fields':('user_type',)}),
     )
+
+    radio_fields = {
+        'user_type': admin.HORIZONTAL,
+    }
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = super().get_fieldsets(request, obj)
 
-        extra_fields = {
-            "Personal info": ["age",],
+        inject_config  = {
+            "Personal info": ["age",'user_type'],
         }
 
         new_fieldsets = []
 
         for name, opts in fieldsets:
-            extra_fields = extra_fields.get(name, [])
+            extra_fields = inject_config .get(name, [])
 
             current_fields = list(opts.get("fields", ()))
 
