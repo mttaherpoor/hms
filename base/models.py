@@ -1,4 +1,5 @@
 from django.db import models
+from django.templatetags.static import static
 from django.shortcuts import reverse
 from shortuuid.django_fields import ShortUUIDField
 
@@ -11,14 +12,17 @@ ImageData = namedtuple("ImageData", ["url", "alt"])
 
 class Service(models.Model):
     image = models.ImageField(upload_to="images/services/",blank=True, null=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    available_doctors = models.ManyToManyField(Doctor, blank=True, null=True)
+    available_doctors = models.ManyToManyField(Doctor, blank=True)
 
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
 
+    DEFAULT_IMAGE = "images/doctors/default-service.jpg",
+    
+    
     def __str__(self):
         return f'{self.name} - {self.cost}'
 
@@ -30,11 +34,11 @@ class Service(models.Model):
         if self.image:
             return ImageData(
                 self.image.url,
-                self.name or "Doctor"
+                self.name or "Service"
             )
 
         return ImageData(
-            "/media/images/doctors/default-service.jpg",
+            static(self.DEFAULT_IMAGE),
             "Default service image"
         )
     
@@ -47,12 +51,12 @@ class Appointment(models.Model):
         ('can', 'Cancelled')
     ]
     
-    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='service_appointments')
-    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True, related_name='doctor_appointments')
-    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, blank=True, related_name='appointments_patient')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, related_name='service_appointments')
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, related_name='doctor_appointments')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, related_name='appointments_patient')
     appointment_date = models.DateTimeField(null=True, blank=True)
-    issues = models.TextField(blank=True, null=True)
-    symptoms = models.TextField(blank=True, null=True)
+    issues = models.TextField(blank=True)
+    symptoms = models.TextField(blank=True)
     appointment_id = ShortUUIDField(length=6, max_length=10, alphabet="1234567890")
     status = models.CharField(max_length=3, choices=STATUS)
 
@@ -78,8 +82,8 @@ class MedicalRecord(models.Model):
 class LabTest(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     test_name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    result = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True)
+    result = models.TextField(blank=True)
 
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
@@ -90,7 +94,7 @@ class LabTest(models.Model):
 
 class Prescription(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
-    medications = models.TextField(blank=True, null=True)
+    medications = models.TextField(blank=True)
 
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
@@ -100,8 +104,8 @@ class Prescription(models.Model):
     
 
 class Billing(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, blank=True,  related_name='billings')
-    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='billing', blank=True, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True,  related_name='billings')
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='billing', blank=True)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
