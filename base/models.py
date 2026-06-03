@@ -1,13 +1,16 @@
 from django.db import models
+from django.shortcuts import reverse
 from shortuuid.django_fields import ShortUUIDField
-# Create your models here.
+
+from collections import namedtuple
 
 from patient.models import Patient
 from doctor.models import Doctor
 
+ImageData = namedtuple("ImageData", ["url", "alt"])
 
 class Service(models.Model):
-    image = models.ImageField(upload_to="images/servies/",blank=True, null=True)
+    image = models.ImageField(upload_to="images/services/",blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
@@ -19,7 +22,22 @@ class Service(models.Model):
     def __str__(self):
         return f'{self.name} - {self.cost}'
 
+    def get_absolute_url(self):
+        return reverse("service_datail", kwargs={"pk": self.pk})
+    
+    @property
+    def image_data(self):
+        if self.image:
+            return ImageData(
+                self.image.url,
+                self.name or "Doctor"
+            )
 
+        return ImageData(
+            "/media/images/doctors/default-service.jpg",
+            "Default service image"
+        )
+    
 
 class Appointment(models.Model):
     STATUS = [

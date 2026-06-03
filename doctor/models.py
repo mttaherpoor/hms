@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
+from collections import namedtuple
+
+ImageData = namedtuple("ImageData", ["url", "alt"])
 
 class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -24,6 +27,19 @@ class Doctor(models.Model):
     def __str__(self):
         return f"Dr. {self.full_name}"
 
+    @property
+    def image_data(self):
+        if self.image:
+            return ImageData(
+                self.image.url,
+                self.name or "Doctor"
+            )
+
+        return ImageData(
+            "/media/images/doctors/default-doctor.jpg",
+            "Default doctor image"
+        )
+    
 
 NOTIFICATION_TYPE = (
     ("new", "New Appointment"),
