@@ -19,6 +19,14 @@ NOTIFICATION_TYPE = (
     ("can", "Appointment Cancelled"),
 )
 
+
+GENDER = (
+    ("mal", "Male"),
+    ("fem", "Female"),
+    ("rat", "Rather not say"),
+)
+
+
 class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="images/patients/", null=True, blank=True)
@@ -26,7 +34,7 @@ class Patient(models.Model):
     email = models.CharField(max_length=100, blank=True)
     mobile = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=100, blank=True)
-    gender = models.CharField(max_length=100, blank=True)
+    gender = models.CharField(max_length=3,choices=GENDER, blank=True)
     dob = models.DateField(default=timezone.now, null=True, blank=True)
     blood_group = models.CharField(choices=BLOOD_GROOPS, max_length=3, null=True, blank=True)
 

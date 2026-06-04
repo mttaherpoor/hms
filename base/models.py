@@ -20,8 +20,7 @@ class Service(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
 
-    DEFAULT_IMAGE = "images/doctors/default-service.jpg",
-    
+    DEFAULT_IMAGE = "images/defaults/default-service.jpg",
     
     def __str__(self):
         return f'{self.name} - {self.cost}'
