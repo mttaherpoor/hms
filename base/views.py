@@ -1,11 +1,11 @@
-from django.views.generic import ListView, DetailView, FormView
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, FormView, TemplateView
 
 from decimal import Decimal
 
 from .models import Service, Appointment, Billing
-from .forms import AppointmentBookingForm
 from doctor.models import Doctor
 from patient.models import Patient
 from patient.forms import PatientForm
@@ -85,7 +85,22 @@ class BookAppointmentView(LoginRequiredMixin, FormView):
             sub_total=service.cost,
             tax=service.cost * TAX_RATE,
             total=service.cost * (1 + TAX_RATE),
-            status="Unpaid",
-        )
+            status=Billing.BILLING_STATUS_UNPAID,
+        )   
 
         return redirect("checkout",billing.billing_id)   
+
+
+class CheckoutView(LoginRequiredMixin, DetailView):
+    model = Billing
+    template_name = "base/checkout.html"
+
+    slug_field = "billing_id"
+    slug_url_kwarg = "billing_id"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stripe_public_key']=settings.STRIPE_PUBLIC_KEY
+        context['paypal_client_id']=settings.PAYPAL_CLIENT_ID
+
+        return context
