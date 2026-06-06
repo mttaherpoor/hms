@@ -14,20 +14,18 @@ BLOOD_GROOPS =(
     ('O+','O+'),('O-','O-'),
 )
 
-NOTIFICATION_TYPE = (
-    ("sch", "Appointment Scheduled"),
-    ("can", "Appointment Cancelled"),
-)
-
-
-GENDER = (
-    ("mal", "Male"),
-    ("fem", "Female"),
-    ("rat", "Rather not say"),
-)
 
 
 class Patient(models.Model):
+    GENDER_MALE = 'mal'
+    GENDER_FEMALE = 'fem'
+    GENDER_OTHER = 'rat'
+
+    GENDER = (
+        (GENDER_MALE, "Male"),
+        (GENDER_FEMALE, "Female"),
+        (GENDER_OTHER, "Rather not say"),
+    )
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="images/patients/", null=True, blank=True)
     full_name = models.CharField(max_length=100, blank=True)
@@ -61,6 +59,14 @@ class Patient(models.Model):
 
 
 class Notification(models.Model):
+    APPOINTMENT_SCHEDULED ='sch'
+    APPOINTMENT_CANCELLED ='can'
+ 
+    NOTIFICATION_TYPE = (
+        (APPOINTMENT_SCHEDULED, "Appointment Scheduled"),
+        (APPOINTMENT_CANCELLED, "Appointment Cancelled"),
+    )
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True)
     appointment = models.ForeignKey("base.Appointment", on_delete=models.CASCADE, blank=True, related_name="patient_appointment_notification")
     type = models.CharField(max_length=3, choices=NOTIFICATION_TYPE)

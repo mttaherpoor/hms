@@ -44,13 +44,17 @@ class Doctor(models.Model):
         )
     
 
-NOTIFICATION_TYPE = (
-    ("new", "New Appointment"),
-    ("can", "Appointment Cancelled"),
-)
 
 
 class Notification(models.Model):
+    NEW_APPOINTMENT ='new'
+    APPOINTMENT_CANCELLED ='can'
+ 
+    NOTIFICATION_TYPE = (
+        (NEW_APPOINTMENT, "New Appointment"),
+        (APPOINTMENT_CANCELLED, "Appointment Cancelled"),
+    )
+
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True)
     appointment = models.ForeignKey('base.Appointment', on_delete=models.CASCADE, blank=True,
                                      related_name="doctor_appointment_notification")

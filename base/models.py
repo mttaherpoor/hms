@@ -43,11 +43,16 @@ class Service(models.Model):
     
 
 class Appointment(models.Model):
-    STATUS = [
-        ('sch', 'Scheduled'), 
-        ('com', 'Completed'), 
-        ('pen', 'Pending'), 
-        ('can', 'Cancelled')
+    APPOINTMENT_STATUS_SCHEDULED ='sch'
+    APPOINTMENT_STATUS_COMPLETED ='com'
+    APPOINTMENT_STATUS_PENDING ='pen'
+    APPOINTMENT_STATUS_CANCELLED ='can'
+
+    Appointment_STATUS = [
+        (APPOINTMENT_STATUS_SCHEDULED, 'Scheduled'), 
+        (APPOINTMENT_STATUS_COMPLETED, 'Completed'), 
+        (APPOINTMENT_STATUS_PENDING, 'Pending'), 
+        (APPOINTMENT_STATUS_CANCELLED, 'Cancelled')
     ]
     
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, related_name='service_appointments')
@@ -57,7 +62,7 @@ class Appointment(models.Model):
     issues = models.TextField(blank=True)
     symptoms = models.TextField(blank=True)
     appointment_id = ShortUUIDField(length=6, max_length=10, alphabet="1234567890")
-    status = models.CharField(max_length=3, choices=STATUS)
+    status = models.CharField(max_length=3, choices=Appointment_STATUS)
 
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
@@ -103,12 +108,19 @@ class Prescription(models.Model):
     
 
 class Billing(models.Model):
+    BILLING_STATUS_PAID = 'pa'
+    BILLING_STATUS_UNPAID = 'un'
+    
+    BILLING_STATUS =   [
+    (BILLING_STATUS_PAID, 'Paid'),
+    (BILLING_STATUS_UNPAID, 'Unpaid')
+]
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True,  related_name='billings')
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='billing', blank=True)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=2, choices=[('pa', 'Paid'), ('un', 'Unpaid')])
+    status = models.CharField(max_length=2, choices=BILLING_STATUS)
     billing_id = ShortUUIDField(length=6, max_length=10, alphabet="1234567890")
 
     datetime_created = models.DateTimeField(auto_now_add=True)
