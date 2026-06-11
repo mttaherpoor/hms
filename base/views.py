@@ -104,3 +104,21 @@ class CheckoutView(LoginRequiredMixin, DetailView):
         context['paypal_client_id']=settings.PAYPAL_CLIENT_ID
 
         return context
+
+
+class PaymentStatusView(LoginRequiredMixin, TemplateView):
+    template_name = "base/payment_status.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        billing = Billing.objects.get(
+            billing_id=self.kwargs["billing_id"]
+        )
+
+        context.update({
+            "billing": billing,
+            "payment_status": self.request.GET.get("payment_status"),
+        })
+
+        return context
