@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 from .payments.views import stripe
+from .payments.views import paypal
 
 urlpatterns = [
     path('',views.HomePageView.as_view(),name='home'),
@@ -13,4 +14,7 @@ urlpatterns = [
     # stripe
     path('stripe_payment/<str:billing_id>/', stripe.StripePaymentView.as_view(), name='stripe_payment'),
     path('stripe_payment_verify/<str:billing_id>/', stripe.StripePaymentVerifyView.as_view(), name='stripe_payment_verify'),
+
+    # paypal
+    path('paypal_payment_verify/<str:billing_id>/', paypal.PayPalPaymentVerifyView.as_view(), name='paypal_payment_verify'),
 ]

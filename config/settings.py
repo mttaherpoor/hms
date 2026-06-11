@@ -35,7 +35,7 @@ SECRET_KEY = env.str('DJANGO_SECRET')
 DEBUG = env.bool('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = []
-
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 # Application definition
 
