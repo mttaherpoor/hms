@@ -131,3 +131,6 @@ class Billing(models.Model):
     def __str__(self):
         return f"Billing for {self.patient.full_name} - Total: {self.total}"
     
+    def get_absolute_url(self):
+        return reverse("base:checkout", kwargs={"billing_id": self.billing_id})
+    

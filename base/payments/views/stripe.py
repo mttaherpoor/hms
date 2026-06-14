@@ -15,11 +15,11 @@ class StripePaymentView(View):
         billing = get_object_or_404(Billing, billing_id=billing_id)
 
         success_url = request.build_absolute_uri(
-            reverse("stripe_payment_verify", args=[billing.billing_id])
+            reverse("base:stripe-payment-verify", args=[billing.billing_id])
         ) + "?session_id={CHECKOUT_SESSION_ID}"
 
         cancel_url = request.build_absolute_uri(
-            reverse("stripe_payment_verify", args=[billing.billing_id])
+            reverse("base:stripe-payment-verify", args=[billing.billing_id])
         ) + "?session_id={CHECKOUT_SESSION_ID}"
 
         session = StripeService.create_checkout_session(

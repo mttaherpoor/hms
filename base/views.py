@@ -88,7 +88,7 @@ class BookAppointmentView(LoginRequiredMixin, FormView):
             status=Billing.BILLING_STATUS_UNPAID,
         )   
 
-        return redirect("checkout",billing.billing_id)   
+        return redirect(billing.get_absolute_url())   
 
 
 class CheckoutView(LoginRequiredMixin, DetailView):
