@@ -32,18 +32,18 @@
       {% for service in services%}
       <div class="col-lg-3">
         <div class="card mb-4 shadow">
-          <a href="{% url 'service_detail' service.pk %}">
+          <a href="{% url 'base:service-detail' service.pk %}">
             <img src={{service.image_data.url}} alt="{{service.image_data.alt}}" class="card-img-top" /></a>
             
           <div class="card-body">
-            <h4 class="mb-2 text-truncate-line-2"><a href="{% url 'service_detail' service.pk %}" class="text-inherit text-dark text-decoration-none">{{service.name}}</a></h4>
+            <h4 class="mb-2 text-truncate-line-2"><a href="{% url 'base:service-detail' service.pk %}" class="text-inherit text-dark text-decoration-none">{{service.name}}</a></h4>
             <p>{{service.description | truncatechars:40}}</p>
             <div class="mt-2">
               <span class="fw-semibold">Doctors Available: {{service.available_doctors.all.count}}</span>
               <div class="lh-1 mt-3">
                 <span class="text-dark fw-bold fs-4">${{service.cost}}</span>
               </div>
-              <a href="{% url 'service_detail' service.pk %}" class="btn btn-sm btn-primary mt-3">Book Appointment <i class="fas fa-arrow-right ms-2"></i></a>
+              <a href="{% url 'base:service-detail' service.pk %}" class="btn btn-sm btn-primary mt-3">Book Appointment <i class="fas fa-arrow-right ms-2"></i></a>
             </div>
           </div>
         </div>
