@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import DetailView, TemplateView, ListView, View
+from django.views.generic import DetailView, TemplateView, ListView, View, CreateView, UpdateView
 
 from .models import Doctor,Notification
 from base.models import Appointment, LabTest, MedicalRecord, Prescription
@@ -52,7 +52,7 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
     
         context["doctor"] = doctor  
         context["appointments"] =appointment   
-        context["medical_recoreds"] =MedicalRecord.objects.filter(appointment=appointment)
+        context["medical_records"] =MedicalRecord.objects.filter(appointment=appointment)
         context["lab_tests"] =LabTest.objects.filter(appointment=appointment)
         context["prescriptions"] =Prescription.objects.filter(appointment=appointment)
         
@@ -102,3 +102,38 @@ class AppointmentCompletedView(LoginRequiredMixin, View):
         messages.success(request, "Appointment COMPLETED Successfully")
 
         return redirect(appointment.get_absolute_url())
+
+
+class MedicalRecordCreate(LoginRequiredMixin, CreateView):
+    model = MedicalRecord
+    fields = ["diagnosis", "treatment"]
+
+    def form_valid(self, form):
+        doctor = Doctor.objects.get(user=self.request.user)
+
+        appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
+
+        form.instance.appointment = appointment
+
+        messages.success(self.request, "Medical Record Added Successfully")
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()
+    
+
+class MedicalRecordUpdate(LoginRequiredMixin, UpdateView):
+    model = MedicalRecord
+    fields = ["diagnosis", "treatment"]
+
+    def get_queryset(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+        return MedicalRecord.objects.filter(appointment__doctor=doctor)
+        
+    def form_valid(self, form):
+        messages.success(self.request, "Medical Record Updated Successfully")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()

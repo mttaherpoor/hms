@@ -70,31 +70,37 @@
                     </div>
                     <div class="collapse" id="collapseMedicalReport">
                         <div class="border p-3 mb-4 rounded-4">
-                            <form action="#" method="POST">
+                            <form action="{% url 'doctor:medical-record-create' appointment.appointment_id %}" method="POST">
+                                {% csrf_token %}
                                 <input type="text" class="form-control mb-3" name="diagnosis" placeholder="Diagnosis" />
                                 <input type="text" class="form-control mb-3" name="treatment" placeholder="Treatment" />
-                                <button class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
+                                <button type='submit' class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
                             </form>
                         </div>
                     </div>
-
+                    
+                    
                     <div class="card mb-4">
                         <div class="border p-3 mb-4 rounded-4">
-                            <div class="shadow p-3 rounded-4 mb-3">
-                                <p><span class="fw-semibold text-dark">Diagnosis:</span> Migraine</p>
-                                <p><span class="fw-semibold text-dark">Treatment:</span> Pain relief medication</p>
-                                <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedicalRecord1" aria-expanded="false" aria-controls="collapseMedicalRecord1">Edit <i class="fas fa-edit ms-2"></i></button>
-                                <div class="collapse mt-3" id="collapseMedicalRecord1">
-                                    <div class="border p-3 rounded-4">
-                                        <form action="#" method="POST">
-                                            <input type="text" class="form-control mb-3" value="Migraine" name="diagnosis" placeholder="Diagnosis" />
-                                            <input type="text" class="form-control mb-3" value="Pain relief medication" name="treatment" placeholder="Treatment" />
-                                            <button class="btn btn-secondary btn-sm">Save Changes <i class="fas fa-save ms-2"></i></button>
-                                        </form>
+                                {% for medical_record in medical_records %}
+                                    <div class="shadow p-3 rounded-4 mb-3">
+                                        <p><span class="fw-semibold text-dark">Diagnosis:</span> {{medical_record.diagnosis}}</p>
+                                        <p><span class="fw-semibold text-dark">Treatment:</span> {{medical_record.treatment}}</p>
+                                        <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedicalRecord{{medical_record.id}}" aria-expanded="false" aria-controls="collapseMedicalRecord{{medical_record.id}}">Edit <i class="fas fa-edit ms-2"></i></button>
+                                        <div class="collapse mt-3" id="collapseMedicalRecord{{medical_record.id}}">
+                                            <div class="border p-3 rounded-4">
+                                                <form action="{% url 'doctor:medical-record-update' appointment.appointment_id medical_record.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="text" class="form-control mb-3" value="{{medical_record.diagnosis}}" name="diagnosis" placeholder="Diagnosis" />
+                                                    <input type="text" class="form-control mb-3" value="{{medical_record.treatment}}" name="treatment" placeholder="Treatment" />
+                                                    <button type='submit' class="btn btn-secondary btn-sm">Save Changes <i class="fas fa-save ms-2"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <p>No medical records</p>
+                                {%  empty %}    
+                                    <p>No medical records</p>
+                                {% endfor %}
                         </div>
                     </div>
                 </div>
