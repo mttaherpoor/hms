@@ -173,3 +173,39 @@ class LabTestUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.appointment.get_absolute_url()
+
+
+class PrescriptionCreateView(LoginRequiredMixin, CreateView):
+    model = Prescription
+    fields = ["medications"]
+
+    def form_valid(self, form):
+        doctor = Doctor.objects.get(user=self.request.user)
+
+        appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
+
+        form.instance.appointment = appointment
+
+        messages.success(self.request, "Prescriptions Added Successfully")
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()
+    
+
+class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
+    model = Prescription
+    fields = ["medications"]
+
+
+    def get_queryset(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+        return Prescription.objects.filter(appointment__doctor=doctor)
+        
+    def form_valid(self, form):
+        messages.success(self.request, "Prescriptions Updated Successfully")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()

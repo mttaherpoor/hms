@@ -19,4 +19,6 @@ urlpatterns = [
     path('appointments/<str:appointment_id>/lab-tests/create/',views.LabTestCreateView.as_view(),name='lab-test-create'),
     path('appointments/<str:appointment_id>/lab-tests/<int:pk>/update/',views.LabTestUpdateView.as_view(),name='lab-test-update'),
 
+    path('appointments/<str:appointment_id>/prescriptions/create/',views.PrescriptionCreateView.as_view(),name='prescription-create'),
+    path('appointments/<str:appointment_id>/prescriptions/<int:pk>/update/',views.PrescriptionUpdateView.as_view(),name='prescription-update'),
 ]
