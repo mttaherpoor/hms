@@ -26,7 +26,7 @@ class Service(models.Model):
         return f'{self.name} - {self.cost}'
 
     def get_absolute_url(self):
-        return reverse("service_datail", kwargs={"pk": self.pk})
+        return reverse("base:service-datail", kwargs={"pk": self.pk})
     
     @property
     def image_data(self):
@@ -70,6 +70,8 @@ class Appointment(models.Model):
     def __str__(self):
         return f"{self.patient.full_name} with {self.doctor.full_name}"
     
+    def get_absolute_url(self):
+        return reverse("doctor:appointment-detail", kwargs={"appointment_id": self.appointment_id})
 
 class MedicalRecord(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
