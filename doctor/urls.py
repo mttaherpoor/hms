@@ -13,8 +13,10 @@ urlpatterns = [
     path('appointments/<str:appointment_id>/activate/',views.AppointmentActivateView.as_view(),name='appointment-activate'),
     path('appointments/<str:appointment_id>/complete/',views.AppointmentCompletedView.as_view(),name='appointment-completed'),
 
-    path('appointments/<str:appointment_id>/medical-records/create/',views.MedicalRecordCreate.as_view(),name='medical-record-create'),
-    path('appointments/<str:appointment_id>/medical-records/<pk>/update/',views.MedicalRecordUpdate.as_view(),name='medical-record-update'),
+    path('appointments/<str:appointment_id>/medical-records/create/',views.MedicalRecordCreateView.as_view(),name='medical-record-create'),
+    path('appointments/<str:appointment_id>/medical-records/<int:pk>/update/',views.MedicalRecordUpdateView.as_view(),name='medical-record-update'),
 
+    path('appointments/<str:appointment_id>/lab-tests/create/',views.LabTestCreateView.as_view(),name='lab-test-create'),
+    path('appointments/<str:appointment_id>/lab-tests/<int:pk>/update/',views.LabTestUpdateView.as_view(),name='lab-test-update'),
 
 ]

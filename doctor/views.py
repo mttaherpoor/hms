@@ -104,7 +104,7 @@ class AppointmentCompletedView(LoginRequiredMixin, View):
         return redirect(appointment.get_absolute_url())
 
 
-class MedicalRecordCreate(LoginRequiredMixin, CreateView):
+class MedicalRecordCreateView(LoginRequiredMixin, CreateView):
     model = MedicalRecord
     fields = ["diagnosis", "treatment"]
 
@@ -123,7 +123,7 @@ class MedicalRecordCreate(LoginRequiredMixin, CreateView):
         return self.object.appointment.get_absolute_url()
     
 
-class MedicalRecordUpdate(LoginRequiredMixin, UpdateView):
+class MedicalRecordUpdateView(LoginRequiredMixin, UpdateView):
     model = MedicalRecord
     fields = ["diagnosis", "treatment"]
 
@@ -133,6 +133,42 @@ class MedicalRecordUpdate(LoginRequiredMixin, UpdateView):
         
     def form_valid(self, form):
         messages.success(self.request, "Medical Record Updated Successfully")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()
+
+
+class LabTestCreateView(LoginRequiredMixin, CreateView):
+    model = LabTest
+    fields = ["test_name", "description", "result"]
+
+    def form_valid(self, form):
+        doctor = Doctor.objects.get(user=self.request.user)
+
+        appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
+
+        form.instance.appointment = appointment
+
+        messages.success(self.request, "Lab Tests Added Successfully")
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.appointment.get_absolute_url()
+    
+
+class LabTestUpdateView(LoginRequiredMixin, UpdateView):
+    model = LabTest
+    fields = ["test_name", "description", "result"]
+
+
+    def get_queryset(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+        return LabTest.objects.filter(appointment__doctor=doctor)
+        
+    def form_valid(self, form):
+        messages.success(self.request, "Lab Tests Updated Successfully")
         return super().form_valid(form)
 
     def get_success_url(self):

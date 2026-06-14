@@ -28,7 +28,7 @@
                             <p><span class="fw-semibold text-dark">Date:</span> {{appointment.appointment_date}}</p>
                                 <p>
                                     <span class="fw-semibold text-dark">Action:</span>
-                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_SCHEDULED  %}
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_SCHEDULED %}
 
                                         <form action="{% url 'doctor:appointment-cancel' appointment.appointment_id %}" method="post" style="display:inline;">
                                             {% csrf_token %}
@@ -45,7 +45,7 @@
                                         </form>
                                     {% endif %}
                                     
-                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_CANCELLED  %}
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_CANCELLED %}
                                         <form action="{% url 'doctor:appointment-activate' appointment.appointment_id %}" method="post" style="display:inline;">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-outline-warning btn-sm">
@@ -54,7 +54,7 @@
                                         </form>
                                     {% endif %}
 
-                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_COMPLETED  %}
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_COMPLETED %}
                                         <a href="#" class="btn btn-outline-success btn-sm">Completed <i class="fas fa-circle ms-2"></i></a>
                                     {% endif %}
                                 </p>
@@ -74,7 +74,7 @@
                                 {% csrf_token %}
                                 <input type="text" class="form-control mb-3" name="diagnosis" placeholder="Diagnosis" />
                                 <input type="text" class="form-control mb-3" name="treatment" placeholder="Treatment" />
-                                <button type='submit' class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
+                                <button type="submit" class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
                             </form>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                {%  empty %}    
+                                {% empty %}    
                                     <p>No medical records</p>
                                 {% endfor %}
                         </div>
@@ -112,35 +112,43 @@
                     </div>
                     <div class="collapse" id="collapseLabTest">
                         <div class="border p-3 mb-4 rounded-4">
-                            <form action="#" method="POST">
+                            <form action="{% url 'doctor:lab-test-create' appointment.appointment_id %}" method="POST">
+                                {% csrf_token %}
                                 <input type="text" class="form-control mb-3" name="test_name" placeholder="Test name" />
                                 <input type="text" class="form-control mb-3" name="description" placeholder="Description" />
-                                <button class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
+                                <textarea name="result" class="form-control" id="" placeholder="Lab Result"></textarea>
+                                <button type="submit" class="btn btn-secondary btn-sm">Save <i class="fas fa-save ms-2"></i></button>
                             </form>
                         </div>
                     </div>
                     <div class="card mb-4">
                         <div class="border p-3 mb-4 rounded-4">
+                            {% for lab_test in lab_tests %}
                             <div class="shadow p-3 rounded-4 mb-3">
-                                <p><span class="fw-semibold text-dark">Test Name:</span> Blood Test</p>
-                                <p><span class="fw-semibold text-dark">Description:</span> Complete Blood Count</p>
-                                <p><span class="fw-semibold text-dark">Result:</span> Not added yet</p>
-                                <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLabTest1" aria-expanded="false" aria-controls="collapseLabTest1">Edit <i class="fas fa-edit ms-2"></i></button>
-                                <div class="collapse mt-3" id="collapseLabTest1">
+                                <p><span class="fw-semibold text-dark">Test Name:</span> {{lab_test.test_name}}t</p>
+                                <p><span class="fw-semibold text-dark">Description:</span> {{lab_test.description}}</p>
+                                <p><span class="fw-semibold text-dark">Result:</span> {{lab_test.result | default:"Not added yet"}}</p>
+                                <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLabTest{{lab_test.id}}" aria-expanded="false" aria-controls="collapseLabTest{{lab_test.id}}">Edit <i class="fas fa-edit ms-2"></i></button>
+                                <div class="collapse mt-3" id="collapseLabTest{{lab_test.id}}">
                                     <div class="border p-3 rounded-4">
-                                        <form action="#" method="POST">
-                                            <input type="text" class="form-control mb-3" value="Blood Test" name="test_name" placeholder="Test name" />
-                                            <input type="text" class="form-control mb-3" value="Complete Blood Count" name="description" placeholder="Description" />
-                                            <button class="btn btn-secondary btn-sm">Save Changes <i class="fas fa-save ms-2"></i></button>
+                                        <form action="{% url 'doctor:lab-test-update' appointment.appointment_id lab_test.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="text" class="form-control mb-3" value="{{lab_test.test_name}}" name="test_name" placeholder="Test name" />
+                                            <input type="text" class="form-control mb-3" value="{{lab_test.description}}" name="description" placeholder="Description" />
+                                            <textarea name="result" class="form-control" id="" placeholder="Lab Result">{{ lab_test.result }}</textarea>
+
+                                            <button type="submit" class="btn btn-secondary btn-sm">Save Changes <i class="fas fa-save ms-2"></i></button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <p>No lab tests</p>
+                            {% empty %}
+                                <p>No lab tests</p>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="d-flex justify-content-between">
                     <h4 class="mb-0 mb-4 fw-bold">Prescription</h4>
                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrescription" aria-expanded="false" aria-controls="collapsePrescription">Add Prescription <i class="fas fa-plus ms-2"></i></button>
