@@ -21,4 +21,7 @@ urlpatterns = [
 
     path('appointments/<str:appointment_id>/prescriptions/create/',views.PrescriptionCreateView.as_view(),name='prescription-create'),
     path('appointments/<str:appointment_id>/prescriptions/<int:pk>/update/',views.PrescriptionUpdateView.as_view(),name='prescription-update'),
+
+    path('payments/',views.PaymentView.as_view(),name='payments'),
+
 ]

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, TemplateView, ListView, View, CreateView, UpdateView
 
 from .models import Doctor,Notification
-from base.models import Appointment, LabTest, MedicalRecord, Prescription
+from base.models import Appointment, Billing, LabTest, MedicalRecord, Prescription
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'doctor/dashboard.html'
@@ -209,3 +209,27 @@ class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.appointment.get_absolute_url()
+
+
+class PaymentView(LoginRequiredMixin, ListView):
+    model = Billing
+    template_name = 'doctor/payments.html'
+    context_object_name = 'payments'
+
+    def get_queryset(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+
+        return Billing.objects.select_related(
+            'patient',
+            'appointment',
+            'appointment__service',
+        ).filter(
+            appointment__doctor=doctor,
+            status=Billing.BILLING_STATUS_PAID
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["doctor"] = Doctor.objects.get(user=self.request.user)
+        return context
+    
