@@ -15,5 +15,7 @@ urlpatterns = [
     path('appointments/<str:appointment_id>/complete/',views.AppointmentCompletedView.as_view(),name='appointment-completed'),
 
     path('payments/',views.PaymentView.as_view(),name='payments'),
-
+    
+    path('notifications/',views.NotificationView.as_view(),name='notifications'),
+    path("notifications/<int:pk>/seen/",views.NotificationSeenView.as_view(),name="notification-seen"),
 ]

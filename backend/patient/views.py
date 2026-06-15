@@ -1,4 +1,4 @@
-from pyexpat.errors import messages
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect
@@ -124,3 +124,37 @@ class PaymentView(LoginRequiredMixin, ListView):
             appointment__patient=patient,
             status=Billing.BILLING_STATUS_PAID
         )
+
+
+class NotificationView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = "patient/notifications.html"
+    context_object_name = "notifications"
+
+    def get_queryset(self):
+        patient = Patient.objects.get(user=self.request.user)
+
+        return Notification.objects.select_related(
+            "appointment",
+            "appointment__patient",
+        ).filter(
+            patient=patient,
+            seen=False,
+        )
+    
+
+class NotificationSeenView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        notification = get_object_or_404(
+            Notification,
+            pk=self.kwargs["pk"],
+            patient__user=request.user,
+        )
+
+        notification.seen = True
+        notification.save(update_fields=["seen"])
+
+        messages.success(request, "Notification marked as seen")
+
+        return redirect("patient:notifications")
