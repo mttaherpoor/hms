@@ -27,7 +27,7 @@
     <form class="row" method="POST">
       {% csrf_token %}
 
-      <div class="col-lg-12 mb-3">
+      <div class="col-lg-6 mb-3">
         <label class="mb-2">Full Name</label>   {{ form.full_name }}
       </div>
 
@@ -48,15 +48,15 @@
       <div class="col-lg-6 mb-3">
         <label class="mb-2">Date of Birth</label> {{ form.dob }}
       </div>
+      
+      <div class="col-lg-6 mb-3">
+      <label class="mb-2">Blood Group</label>   {{ form.blood_group }}
+      </div>
 
       <div class="col-lg-12 mb-3">
         <label class="mb-2">Address</label> {{ form.address }}
       </div>
-
-      <div class="col-lg-12 mb-3">
-        <label class="mb-2">Blood Group</label>   {{ form.blood_group }}
-      </div>
-
+      
       <div class="col-lg-12 mb-3">
         <label class="mb-2">Issues</label>   {{ form.issues }}
       </div>

@@ -8,7 +8,7 @@ from decimal import Decimal
 from .models import Service, Appointment, Billing
 from doctor.models import Doctor
 from patient.models import Patient
-from patient.forms import PatientForm
+from patient.forms import PatientAppointmentForm
 
 TAX_RATE = Decimal(0.05)
 
@@ -28,7 +28,7 @@ class ServiceDetailView(DetailView):
 
 class BookAppointmentView(LoginRequiredMixin, FormView):
     template_name = "base/book_appointment.html"
-    form_class = PatientForm
+    form_class = PatientAppointmentForm
 
     def get_service(self):
         return get_object_or_404(
