@@ -70,8 +70,8 @@ class Appointment(models.Model):
     def __str__(self):
         return f"{self.patient.full_name} with {self.doctor.full_name}"
     
-    def get_absolute_url(self):
-        return reverse("doctor:appointment-detail", kwargs={"appointment_id": self.appointment_id})
+    def get_absolute_url(self, model):
+        return reverse(f"{model}:appointment-detail", kwargs={"appointment_id": self.appointment_id})
 
 class MedicalRecord(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)

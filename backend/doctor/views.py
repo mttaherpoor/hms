@@ -73,7 +73,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 
         messages.success(request, "Appointment Cancelled Successfully")
 
-        return redirect(appointment.get_absolute_url())
+        return redirect(appointment.get_absolute_url("doctor"))
 
 
 class AppointmentActivateView(LoginRequiredMixin, View):
@@ -88,7 +88,7 @@ class AppointmentActivateView(LoginRequiredMixin, View):
 
         messages.success(request, "Appointment Re-SCHEDULED Successfully")
 
-        return redirect(appointment.get_absolute_url())
+        return redirect(appointment.get_absolute_url("doctor"))
 
 
 class AppointmentCompletedView(LoginRequiredMixin, View):
@@ -103,7 +103,7 @@ class AppointmentCompletedView(LoginRequiredMixin, View):
 
         messages.success(request, "Appointment COMPLETED Successfully")
 
-        return redirect(appointment.get_absolute_url())
+        return redirect(appointment.get_absolute_url("doctor"))
 
 
 class MedicalRecordCreateView(LoginRequiredMixin, CreateView):
@@ -122,7 +122,7 @@ class MedicalRecordCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
     
 
 class MedicalRecordUpdateView(LoginRequiredMixin, UpdateView):
@@ -138,7 +138,7 @@ class MedicalRecordUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
 
 
 class LabTestCreateView(LoginRequiredMixin, CreateView):
@@ -157,7 +157,7 @@ class LabTestCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
     
 
 class LabTestUpdateView(LoginRequiredMixin, UpdateView):
@@ -174,7 +174,7 @@ class LabTestUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
 
 
 class PrescriptionCreateView(LoginRequiredMixin, CreateView):
@@ -193,7 +193,7 @@ class PrescriptionCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
     
 
 class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
@@ -210,7 +210,7 @@ class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return self.object.appointment.get_absolute_url()
+        return self.object.appointment.get_absolute_url("doctor")
 
 
 class PaymentView(LoginRequiredMixin, ListView):
