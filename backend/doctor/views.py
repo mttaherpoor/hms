@@ -2,10 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView, ListView, View, CreateView, UpdateView
 
 from typing import Any
 
+from .forms import DoctorForm
 from .models import Doctor,Notification
 from base.models import Appointment, Billing, LabTest, MedicalRecord, Prescription
 
@@ -264,3 +266,21 @@ class NotificationSeenView(LoginRequiredMixin, View):
         messages.success(request, "Notification marked as seen")
 
         return redirect("doctor:notifications")
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    template_name = "doctor/profile.html"
+    form_class = DoctorForm
+    model = Doctor
+    context_object_name = 'doctor'
+
+    def get_object(self, queryset=None):
+        return Doctor.objects.get(user=self.request.user)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Profile updated successfully")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("doctor:profile")    
+               

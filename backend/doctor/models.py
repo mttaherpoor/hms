@@ -20,7 +20,7 @@ class Doctor(models.Model):
     qualifications = models.CharField(max_length=100, blank=True)
     
     years_of_experience = models.CharField(max_length=100, blank=True)
-    next_available_appointment_date = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    next_available_appointment_date = models.DateField(null=True, blank=True)
 
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
