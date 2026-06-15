@@ -24,4 +24,7 @@ urlpatterns = [
 
     path('payments/',views.PaymentView.as_view(),name='payments'),
 
+    path('notifications/',views.NotificationView.as_view(),name='notifications'),
+    path("notifications/<int:pk>/seen/",views.NotificationSeenView.as_view(),name="notification-seen"),
+
 ]

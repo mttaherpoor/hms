@@ -1,7 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, TemplateView, ListView, View, CreateView, UpdateView
+
+from typing import Any
 
 from .models import Doctor,Notification
 from base.models import Appointment, Billing, LabTest, MedicalRecord, Prescription
@@ -228,8 +231,36 @@ class PaymentView(LoginRequiredMixin, ListView):
             status=Billing.BILLING_STATUS_PAID
         )
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["doctor"] = Doctor.objects.get(user=self.request.user)
-        return context
+
+class NotificationView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = "doctor/notifications.html"
+    context_object_name = "notifications"
+
+    def get_queryset(self):
+        doctor = Doctor.objects.get(user=self.request.user)
+
+        return Notification.objects.select_related(
+            "appointment",
+            "appointment__patient",
+        ).filter(
+            doctor=doctor,
+            seen=False,
+        )
     
+
+class NotificationSeenView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        notification = get_object_or_404(
+            Notification,
+            pk=self.kwargs["pk"],
+            doctor__user=request.user,
+        )
+
+        notification.seen = True
+        notification.save(update_fields=["seen"])
+
+        messages.success(request, "Notification marked as seen")
+
+        return redirect("doctor:notifications")
