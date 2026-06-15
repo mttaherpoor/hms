@@ -1,11 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView, ListView, View, CreateView, UpdateView
-
-from typing import Any
 
 from .forms import DoctorForm
 from .models import Doctor,Notification
@@ -19,8 +16,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         doctor = Doctor.objects.get(user=self.request.user)
 
         context["doctor"] = doctor  
-        context["notifications"] = Notification.objects.filter(doctor=doctor)   
-        context["appointments"] =Appointment.objects.filter(doctor=doctor) 
+        context["notifications"] = Notification.objects.filter(doctor=doctor,seen=False)   
+        context["appointments"] =Appointment.objects.filter(doctor=doctor).exclude(status__isnull=True).exclude(status="") 
         
         return context
     
@@ -32,7 +29,7 @@ class AppointmentsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         doctor = Doctor.objects.get(user=self.request.user)
-        return Appointment.objects.filter(doctor=doctor)
+        return Appointment.objects.filter(doctor=doctor).exclude(status__isnull=True).exclude(status="")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -15,7 +15,7 @@ class PaymentService:
         billing.save()
 
         appointment = billing.appointment
-        appointment.status = Appointment.APPOINTMENT_STATUS_COMPLETED
+        appointment.status = Appointment.APPOINTMENT_STATUS_SCHEDULED
         appointment.save()
 
         DoctorNotification.objects.create(

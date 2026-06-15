@@ -65,10 +65,31 @@
                                     <td>{{appointment.patient.full_name }}</td>
                                     <td>{{appointment.issues}}</td>
                                     <td>{{appointment.appointment_date}}</td>
-                                    <td>{{appointment.status}}</td>
+                                    <td>{{appointment.get_status_display}}</td>
                                         <td>
-                                        <a href="" class="btn btn-secondary btn-sm"> <i class="fas fa-eye"></i></a>
-                                        <a href="" class="btn btn-danger btn-sm">Cancel Appointment <i class="fas fa-trash ms-2"></i></a>
+                                        <a href="{% url 'doctor:appointment-detail' appointment.appointment_id %}" class="btn btn-secondary btn-sm"> <i class="fas fa-eye"></i></a>
+                                        {# <a href="" class="btn btn-danger btn-sm">Cancel Appointment <i class="fas fa-trash ms-2"></i></a> #}
+                                        {% if appointment.status == appointment.APPOINTMENT_STATUS_SCHEDULED %}
+                                            <form action="{% url 'doctor:appointment-cancel' appointment.appointment_id %}" method="post" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    Cancel Appointment <i class="fas fa-trash ms-2"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                        
+                                        {% if appointment.status == appointment.APPOINTMENT_STATUS_CANCELLED %}
+                                            <form action="{% url 'doctor:appointment-activate' appointment.appointment_id %}" method="post" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-warning btn-sm">
+                                                    Activate Appointment <i class="fas fa-check ms-2"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+    
+                                        {% if appointment.status == appointment.APPOINTMENT_STATUS_COMPLETED %}
+                                            <a href="#" class="btn btn-outline-success btn-sm">Completed <i class="fas fa-circle ms-2"></i></a>
+                                        {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
