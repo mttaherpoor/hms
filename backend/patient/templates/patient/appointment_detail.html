@@ -1,0 +1,122 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block page_title %}
+    Appointments
+{% endblock %}
+
+{% block content %}    
+<section class="pt-5 pb-5">
+    <div class="container">
+        <div class="row mt-0 mt-md-4">
+
+            {% include "patient/sidebar.html" %}
+
+            <div class="col-lg-9 col-md-8 col-12">
+                <h4 class="mb-0 mb-4 fw-bold">Appointment Detail #{{appointment.appointment_id}}</h4>
+                <div class="card mb-4">
+                    <div class="shadow border p-3 mb-4 rounded-4">
+                        <p>
+                            <a>
+                            <p><span class="fw-semibold text-dark">Appointment ID:</span> #{{appointment.appointment_id}}</p>
+                            <p><span class="fw-semibold text-dark">Service:</span> {{appointment.service}}</p>
+                            <p><span class="fw-semibold text-dark">Doctor:</span> {{appointment.doctor}}</p>
+                            <p><span class="fw-semibold text-dark">Issue:</span> {{appointment.issues}}</p>
+                            <p><span class="fw-semibold text-dark">Symptoms:</span> {{appointment.symptoms}}</p>
+                            <p><span class="fw-semibold text-dark">Status:</span> {{appointment.get_status_display}}</p>
+                            <p><span class="fw-semibold text-dark">Date:</span> {{appointment.appointment_date}}</p>
+                                <p>
+                                    <span class="fw-semibold text-dark">Action:</span>
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_SCHEDULED %}
+
+                                        <form action="{% url 'patient:appointment-cancel' appointment.appointment_id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                Cancel Appointment <i class="fas fa-trash ms-2"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <form action="{% url 'patient:appointment-completed' appointment.appointment_id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-success btn-sm ">
+                                                Complete Appointment <i class="fas fa-check-circle ms-2"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_CANCELLED %}
+                                        <form action="{% url 'patient:appointment-activate' appointment.appointment_id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-warning btn-sm">
+                                                Activate Appointment <i class="fas fa-check ms-2"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+                                    {% if appointment.status == appointment.APPOINTMENT_STATUS_COMPLETED %}
+                                        <a href="#" class="btn btn-outline-success btn-sm">Completed <i class="fas fa-circle ms-2"></i></a>
+                                    {% endif %}
+                                </p>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div id="medical-report">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="mb-0 mb-4 fw-bold">Medical Reports</h4>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="border p-3 mb-4 rounded-4">
+                                {% for medical_record in medical_records %}
+                                    <div class="shadow p-3 rounded-4 mb-3">
+                                        <p><span class="fw-semibold text-dark">Diagnosis:</span> {{medical_record.diagnosis}}</p>
+                                        <p><span class="fw-semibold text-dark">Treatment:</span> {{medical_record.treatment}}</p>
+                                    </div>
+                                {% empty %}    
+                                    <p>No medical records</p>
+                                {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="lab-test">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="mb-0 mb-4 fw-bold">Labs Tests Reports</h4>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="border p-3 mb-4 rounded-4">
+                            {% for lab_test in lab_tests %}
+                            <div class="shadow p-3 rounded-4 mb-3">
+                                <p><span class="fw-semibold text-dark">Test Name:</span> {{lab_test.test_name}}t</p>
+                                <p><span class="fw-semibold text-dark">Description:</span> {{lab_test.description}}</p>
+                                <p><span class="fw-semibold text-dark">Result:</span> {{lab_test.result | default:"Not added yet"}}</p>
+                            </div>
+                            {% empty %}
+                                <p>No lab tests</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <h4 class="mb-0 mb-4 fw-bold">Prescription</h4>
+                </div>
+                <div class="card mb-4">
+                    <div class="border p-3 mb-4 rounded-4">
+                        {% for prescription in prescriptions %}
+                            <div class="shadow p-3 rounded-4 mb-3">
+                            
+                                <p><span class="fw-semibold text-dark">Medications:</span> {{prescription.medications}}</p>
+                            </div>
+                        {% empty %}
+                            <p>No prescriptions</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
