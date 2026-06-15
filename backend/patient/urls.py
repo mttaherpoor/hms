@@ -14,4 +14,6 @@ urlpatterns = [
     path('appointments/<str:appointment_id>/activate/',views.AppointmentActivateView.as_view(),name='appointment-activate'),
     path('appointments/<str:appointment_id>/complete/',views.AppointmentCompletedView.as_view(),name='appointment-completed'),
 
+    path('payments/',views.PaymentView.as_view(),name='payments'),
+
 ]

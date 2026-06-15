@@ -106,3 +106,21 @@ class AppointmentCompletedView(LoginRequiredMixin, View):
         messages.success(request, "Appointment COMPLETED Successfully")
 
         return redirect(appointment.get_absolute_url("patient"))
+
+
+class PaymentView(LoginRequiredMixin, ListView):
+    model = Billing
+    template_name = 'patient/payments.html'
+    context_object_name = 'payments'
+
+    def get_queryset(self):
+        patient = Patient.objects.get(user=self.request.user)
+
+        return Billing.objects.select_related(
+            'patient',
+            'appointment',
+            'appointment__service',
+        ).filter(
+            appointment__patient=patient,
+            status=Billing.BILLING_STATUS_PAID
+        )
