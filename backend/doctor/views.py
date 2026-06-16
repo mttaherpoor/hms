@@ -13,7 +13,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         context["doctor"] = doctor  
         context["notifications"] = Notification.objects.filter(doctor=doctor,seen=False)   
@@ -28,12 +28,12 @@ class AppointmentsView(LoginRequiredMixin, ListView):
     context_object_name = "appointments"
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         return Appointment.objects.filter(doctor=doctor).exclude(status__isnull=True).exclude(status="")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["doctor"] = Doctor.objects.get(user=self.request.user)
+        context["doctor"] = get_object_or_404(Doctor,user=self.request.user)
         return context
     
 
@@ -44,12 +44,12 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
     template_name = 'doctor/appointment_detail.html'
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         return Appointment.objects.filter(doctor=doctor)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         appointment = self.object     
     
         context["doctor"] = doctor  
@@ -64,7 +64,7 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
 class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        doctor = Doctor.objects.get(user=request.user)
+        doctor = get_object_or_404(Doctor,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -79,7 +79,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 class AppointmentActivateView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        doctor = Doctor.objects.get(user=request.user)
+        doctor = get_object_or_404(Doctor,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -94,7 +94,7 @@ class AppointmentActivateView(LoginRequiredMixin, View):
 class AppointmentCompletedView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        doctor = Doctor.objects.get(user=request.user)
+        doctor = get_object_or_404(Doctor,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -111,7 +111,7 @@ class MedicalRecordCreateView(LoginRequiredMixin, CreateView):
     fields = ["diagnosis", "treatment"]
 
     def form_valid(self, form):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -130,7 +130,7 @@ class MedicalRecordUpdateView(LoginRequiredMixin, UpdateView):
     fields = ["diagnosis", "treatment"]
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         return MedicalRecord.objects.filter(appointment__doctor=doctor)
         
     def form_valid(self, form):
@@ -146,7 +146,7 @@ class LabTestCreateView(LoginRequiredMixin, CreateView):
     fields = ["test_name", "description", "result"]
 
     def form_valid(self, form):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -166,7 +166,7 @@ class LabTestUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         return LabTest.objects.filter(appointment__doctor=doctor)
         
     def form_valid(self, form):
@@ -182,7 +182,7 @@ class PrescriptionCreateView(LoginRequiredMixin, CreateView):
     fields = ["medications"]
 
     def form_valid(self, form):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],doctor=doctor)
 
@@ -202,7 +202,7 @@ class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
         return Prescription.objects.filter(appointment__doctor=doctor)
         
     def form_valid(self, form):
@@ -219,7 +219,7 @@ class PaymentView(LoginRequiredMixin, ListView):
     context_object_name = 'payments'
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         return Billing.objects.select_related(
             'patient',
@@ -237,7 +237,7 @@ class NotificationView(LoginRequiredMixin, ListView):
     context_object_name = "notifications"
 
     def get_queryset(self):
-        doctor = Doctor.objects.get(user=self.request.user)
+        doctor = get_object_or_404(Doctor,user=self.request.user)
 
         return Notification.objects.select_related(
             "appointment",
@@ -272,7 +272,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     context_object_name = 'doctor'
 
     def get_object(self, queryset=None):
-        return Doctor.objects.get(user=self.request.user)
+        return get_object_or_404(Doctor,user=self.request.user)
 
     def form_valid(self, form):
         messages.success(self.request, "Profile updated successfully")

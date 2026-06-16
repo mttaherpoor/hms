@@ -16,7 +16,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
 
         context["patient"] = patient  
         context["notifications"] = Notification.objects.filter(patient=patient,seen=False)   
@@ -32,12 +32,12 @@ class AppointmentsView(LoginRequiredMixin, ListView):
     context_object_name = "appointments"
 
     def get_queryset(self):
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
         return Appointment.objects.filter(patient=patient).exclude(status__isnull=True).exclude(status="")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["patient"] = Patient.objects.get(user=self.request.user)
+        context["patient"] = get_object_or_404(Patient,user=self.request.user)
         return context
     
 
@@ -48,12 +48,12 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
     template_name = 'patient/appointment_detail.html'
 
     def get_queryset(self):
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
         return Appointment.objects.filter(patient=patient)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
         appointment = self.object     
     
         context["patient"] = patient  
@@ -68,7 +68,7 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
 class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        patient = Patient.objects.get(user=request.user)
+        patient = get_object_or_404(Patient,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],patient=patient)
 
@@ -83,7 +83,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 class AppointmentActivateView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        patient = Patient.objects.get(user=request.user)
+        patient = get_object_or_404(Patient,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],patient=patient)
 
@@ -98,7 +98,7 @@ class AppointmentActivateView(LoginRequiredMixin, View):
 class AppointmentCompletedView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        patient = Patient.objects.get(user=request.user)
+        patient = get_object_or_404(Patient,user=request.user)
 
         appointment = get_object_or_404(Appointment,appointment_id=self.kwargs["appointment_id"],patient=patient)
 
@@ -116,7 +116,7 @@ class PaymentView(LoginRequiredMixin, ListView):
     context_object_name = 'payments'
 
     def get_queryset(self):
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
 
         return Billing.objects.select_related(
             'patient',
@@ -134,7 +134,7 @@ class NotificationView(LoginRequiredMixin, ListView):
     context_object_name = "notifications"
 
     def get_queryset(self):
-        patient = Patient.objects.get(user=self.request.user)
+        patient = get_object_or_404(Patient,user=self.request.user)
 
         return Notification.objects.select_related(
             "appointment",
@@ -169,7 +169,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     context_object_name = 'patient'
 
     def get_object(self, queryset=None):
-        return Patient.objects.get(user=self.request.user)
+        return get_object_or_404(Patient,user=self.request.user)
 
     def form_valid(self, form):
         messages.success(self.request, "Profile updated successfully")
