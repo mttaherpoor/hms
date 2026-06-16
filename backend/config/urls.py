@@ -18,6 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +27,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('doctor/', include('doctor.urls')),
     path('patient/', include('patient.urls')),
+
+    path('about-us/', TemplateView.as_view(template_name='about-us.html'),name='about-us'),
+    path('contact-us/', TemplateView.as_view(template_name='contact-us.html'),name='contact-us'),
 
 ]
 

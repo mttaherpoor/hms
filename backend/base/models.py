@@ -25,8 +25,9 @@ class Service(models.Model):
     def __str__(self):
         return f'{self.name} - {self.cost}'
 
+
     def get_absolute_url(self):
-        return reverse("base:service-datail", kwargs={"pk": self.pk})
+        return reverse("base:service-detail", kwargs={"pk": self.pk})
     
     @property
     def image_data(self):
