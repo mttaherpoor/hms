@@ -3,7 +3,7 @@
 from base.models import Billing, Appointment
 from doctor.models import Notification as DoctorNotification
 from patient.models import Notification as PatientNotification
-
+from base.signals import payment_completed 
 
 class PaymentService:
     @staticmethod
@@ -14,18 +14,10 @@ class PaymentService:
         billing.status = Billing.BILLING_STATUS_PAID
         billing.save()
 
+        # create signal
+        payment_completed.send_robust(sender=Billing, billing=billing)
+
         appointment = billing.appointment
         appointment.status = Appointment.APPOINTMENT_STATUS_SCHEDULED
         appointment.save()
 
-        DoctorNotification.objects.create(
-            doctor=appointment.doctor,
-            appointment=appointment,
-            type=DoctorNotification.NEW_APPOINTMENT
-        )
-
-        PatientNotification.objects.create(
-            patient=appointment.patient,
-            appointment=appointment,
-            type=PatientNotification.APPOINTMENT_SCHEDULED
-        )

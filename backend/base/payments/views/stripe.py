@@ -23,6 +23,7 @@ class StripePaymentView(View):
         ) + "?session_id={CHECKOUT_SESSION_ID}"
 
         session = StripeService.create_checkout_session(
+            request=request,
             billing=billing,
             success_url=success_url,
             cancel_url=cancel_url,

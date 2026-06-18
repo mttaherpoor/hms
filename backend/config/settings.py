@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "import_export",
     "crispy_forms",
     "crispy_bootstrap5",
+    'anymail',
 
     # local apps
     'base',
@@ -148,7 +149,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-LOGIN_URL = 'home'
+LOGIN_URL = 'base:home'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -165,6 +166,18 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+FROM_EMAIL = EMAIL_HOST_USER
 
 # Bootstrap Configs
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

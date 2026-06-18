@@ -8,9 +8,9 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class StripeService:
     @staticmethod
-    def create_checkout_session(*, billing, success_url, cancel_url):
+    def create_checkout_session(*, request, billing, success_url, cancel_url):
         return stripe.checkout.Session.create(
-            customer_email=billing.patient.email,
+            customer_email=request.user.email,
             payment_method_types=['card'],
             line_items=[
                 {
