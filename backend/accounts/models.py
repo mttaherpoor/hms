@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from .managers import CustomUserManager
 
 class UserType(models.TextChoices):
     DOCTOR = "doc", "Doctor"
@@ -16,6 +17,8 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'user_type']
+
+    objects=CustomUserManager()
 
     def __str__(self:AbstractUser) -> str:
         return self.username
