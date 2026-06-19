@@ -10,7 +10,7 @@ from doctor.models import Doctor
 from patient.models import Patient
 from patient.forms import PatientAppointmentForm
 
-TAX_RATE = Decimal(0.05)
+TAX_RATE = Decimal("0.05")
 
 class HomePageView(ListView):
     queryset = Service.objects.all()
@@ -68,7 +68,7 @@ class BookAppointmentView(LoginRequiredMixin, FormView):
 
         patient = form.save(commit=False)
         patient.email = self.get_patient().email
-        patient = form.save()
+        patient.save()
 
         appointment = Appointment.objects.create(
             service=service,
@@ -79,12 +79,16 @@ class BookAppointmentView(LoginRequiredMixin, FormView):
             symptoms=form.cleaned_data["symptoms"],
         )
 
+        sub_total = service.cost
+        tax = (sub_total * TAX_RATE).quantize(Decimal("0.01"))
+        total = (sub_total + tax).quantize(Decimal("0.01"))
+
         billing = Billing.objects.create(
             patient=patient,
             appointment=appointment,
-            sub_total=service.cost,
-            tax=service.cost * TAX_RATE,
-            total=service.cost * (1 + TAX_RATE),
+            sub_total=sub_total,
+            tax=tax,
+            total=total,
             status=Billing.BILLING_STATUS_UNPAID,
         )   
 
