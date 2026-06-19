@@ -17,6 +17,14 @@ from django.contrib.messages import constants as messages
 
 from . import jazzmin
 
+def get_secret(secret_name, default=None):
+    secret_file = Path(f"/run/secrets/{secret_name}")
+
+    if secret_file.exists():
+        return secret_file.read_text().strip()
+
+    return default
+
 env = Env()
 env.read_env()
 
@@ -29,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('DJANGO_SECRET')
+SECRET_KEY = get_secret("django_secret_key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DJANGO_DEBUG')
@@ -174,7 +182,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = get_secret("email_password")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FROM_EMAIL = EMAIL_HOST_USER
@@ -185,6 +193,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 #Bank API
 STRIPE_PUBLIC_KEY=env("STRIPE_PUBLIC_KEY")
-STRIPE_SECRET_KEY=env("STRIPE_SECRET_KEY")
+STRIPE_SECRET_KEY=get_secret("stripe_secret_key")
 PAYPAL_CLIENT_ID=env("PAYPAL_CLIENT_ID")
-PAYPAL_SECRET_ID=env("PAYPAL_SECRET_ID")
+PAYPAL_SECRET_ID=get_secret("paypal_secret")
