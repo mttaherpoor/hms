@@ -1,0 +1,104 @@
+services:
+  backend:
+    build: ./backend
+    
+    container_name: hms_backend
+    
+    command: >
+      sh -c "python manage.py migrate &&
+            python manage.py collectstatic --noinput &&
+            gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 60"
+
+    volumes:
+      # - ./backend:/app 
+      - hms_static:/app/staticfiles
+      - hms_media:/app/media
+    
+    env_file:
+      - .env
+    
+    environment:
+      - DJANGO_DEBUG=${DOCKER_COMPOSE_DJANGO_DEBUG}
+
+      - DJANGO_POSTGRES_USER=${DOCKER_COMPOSE_DJANGO_POSTGRES_USER}
+      - DJANGO_POSTGRES_DB=${DOCKER_COMPOSE_DJANGO_POSTGRES_DB}
+      - DJANGO_POSTGRES_HOST=${DOCKER_COMPOSE_DJANGO_POSTGRES_HOST}
+      
+      - DJANGO_EMAIL_HOST_USER=${DOCKER_COMPOSE_DJANGO_EMAIL_HOST_USER}
+
+      - DJANGO_ALLOWED_HOSTS=${DOCKER_COMPOSE_DJANGO_ALLOWED_HOSTS}
+      - DJANGO_CSRF_TRUSTED_ORIGINS=${DOCKER_COMPOSE_DJANGO_CSRF_TRUSTED_ORIGINS}
+
+      - STRIPE_PUBLIC_KEY=${DOCKER_COMPOSE_STRIPE_PUBLIC_KEY}
+      - PAYPAL_CLIENT_ID=${DOCKER_COMPOSE_PAYPAL_CLIENT_ID}
+    
+    secrets:
+      - django_secret_key
+      - postgres_password
+      - email_password
+      - stripe_secret_key
+      - paypal_secret
+    
+    depends_on:
+      - db
+    
+    networks:
+      hms_network:
+
+
+  db:
+    image: postgres:16
+
+    container_name: hms-db
+    
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_USER: ${DOCKER_COMPOSE_DJANGO_POSTGRES_USER}
+      POSTGRES_DB: ${DOCKER_COMPOSE_DJANGO_POSTGRES_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+
+    secrets:
+      - postgres_password
+    
+    volumes:
+      - hms_db:/var/lib/postgresql/data
+    
+    networks:
+      hms_network:
+        aliases:
+          - hms-db-host
+
+volumes:
+  hms_static:
+    external: true
+    name: hms_static
+
+  hms_media:
+    external: true
+    name: hms_media
+
+  hms_db:
+    external: true
+    name: hms_db
+
+secrets:
+  django_secret_key:
+    file: ./secrets/django_secret_key.txt
+
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+
+  email_password:
+    file: ./secrets/email_password.txt
+
+  stripe_secret_key:
+    file: ./secrets/stripe_secret_key.txt
+
+  paypal_secret:
+    file: ./secrets/paypal_secret.txt
+    
+networks:
+  hms_network:
+    external: true
+    name: shared_net
