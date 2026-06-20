@@ -16,8 +16,6 @@ jobs:
           POSTGRES_DB: test_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
 
     env:
       DJANGO_DEBUG: "True"
@@ -26,6 +24,7 @@ jobs:
       DJANGO_POSTGRES_PASSWORD: postgres
       DJANGO_POSTGRES_HOST: localhost
       DJANGO_SECRET_KEY: test
+      DJANGO_SETTINGS_MODULE: config.settings.ci
 
     steps:
       - name: Checkout code
