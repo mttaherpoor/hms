@@ -17,7 +17,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
-        - 5432:5432
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -25,12 +25,6 @@ jobs:
           --health-retries 5
 
     env:
-      DJANGO_DEBUG: "True"
-      DJANGO_POSTGRES_DB: test_db
-      DJANGO_POSTGRES_USER: postgres
-      DJANGO_POSTGRES_PASSWORD: postgres
-      DJANGO_POSTGRES_HOST: localhost
-      DJANGO_SECRET_KEY: test
       DJANGO_SETTINGS_MODULE: config.settings.ci
 
     steps:
@@ -51,10 +45,25 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: |
-          pip install -r backend/requirements.txt
+        run: pip install -r backend/requirements.txt
 
       - name: Run tests
         run: |
           cd backend
           python manage.py test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/hms
+            git pull origin main
+            docker compose up -d --build
