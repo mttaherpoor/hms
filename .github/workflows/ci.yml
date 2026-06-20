@@ -26,7 +26,6 @@ jobs:
       DJANGO_POSTGRES_PASSWORD: postgres
       DJANGO_POSTGRES_HOST: localhost
       DJANGO_SECRET_KEY: test
-      EMAIL_HOST_USER: test@test.com
 
     steps:
       - name: Checkout code
