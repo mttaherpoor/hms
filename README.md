@@ -40,27 +40,32 @@ backend/
 │── config/ # Django settings & ASGI/WSGI
 
 
----
-
 ## 🐳 Run with Docker
 
 ### 1. Clone repository
 ```bash
 git clone https://github.com/your-username/hms.git
 cd hms
+```
 2. Create environment file
+```bash
 cp .env.example .env
+```
 3. Run containers
+```bash
 docker-compose up --build
+```bash
 ⚙️ Environment Variables
 
 Create .env file:
-
+```bash
 SECRET_KEY=your_secret
 DEBUG=True
 POSTGRES_DB=your_db
 POSTGRES_USER=your_user
 POSTGRES_PASSWORD=your_password
+```
+
 🌐 Nginx Setup (Production)
 Acts as reverse proxy
 Handles static/media files
@@ -74,8 +79,9 @@ Lint checks
 Docker build validation
 
 Workflow located at:
-
+```bash
 .github/workflows/ci.yml
+```
 📁 Templates
 
 Includes prebuilt UI templates:
@@ -86,12 +92,15 @@ Patient dashboard
 Email templates
 Static landing pages
 🧑‍💻 Development Setup (Without Docker)
+
+```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
+```
 📌 Notes
 Uses custom user model (accounts.CustomUser)
 Modular app structure
@@ -108,10 +117,10 @@ Built with ❤️ by Mohamad Taher Taherpoor
 ---
 
 If you want, I can next upgrade this into:
-
+```bash
 - 🔥 :contentReference[oaicite:0]{index=0}
 - 🚀 :contentReference[oaicite:1]{index=1}
 - 🧪 :contentReference[oaicite:2]{index=2}
 - 🌍 :contentReference[oaicite:3]{index=3}
-
+```bash
 Just tell me.
