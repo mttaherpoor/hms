@@ -1,10 +1,4 @@
-# 🏥 HMS - Hospital Management System
-
-A full-featured **Hospital Management System (HMS)** built with modern backend architecture using **Django**, containerized with **Docker**, and designed for scalable deployment using **Nginx**.
-
----
-
-## 🚀 Tech Stack
+# 🏥 HMS — Hospital Management System
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![Django](https://img.shields.io/badge/Django-5.x-green?logo=django)
@@ -12,115 +6,133 @@ A full-featured **Hospital Management System (HMS)** built with modern backend a
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-brightgreen?logo=nginx)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+A full-featured **Hospital Management System** built with **Django**, containerized with **Docker**, and designed for scalable production deployment behind **Nginx**.
+
 ---
 
-## 📦 Features
+## ✨ Features
 
-- 👨‍⚕️ Doctor & Patient Management
-- 📅 Appointment Booking System
-- 💳 Payment Integration (Stripe / PayPal)
-- 📧 Email Notifications
-- 📊 Dashboard for Doctors & Patients
-- 🔐 Custom Authentication System
-- 📄 Medical Records & Lab Tests
-- 🧾 Billing System
-- 🐳 Dockerized Deployment
-- ⚡ CI/CD via GitHub Actions
+| Area | Details |
+|------|---------|
+| 👨‍⚕️ Staff | Doctor & Patient management |
+| 📅 Scheduling | Appointment booking system |
+| 💳 Payments | Stripe / PayPal integration |
+| 📧 Notifications | Email alerts & templates |
+| 📊 Dashboards | Separate views for doctors & patients |
+| 🔐 Auth | Custom authentication system |
+| 📄 Records | Medical records & lab tests |
+| 🧾 Billing | Full billing system |
+| 🐳 DevOps | Dockerized deployment + CI/CD |
 
 ---
 
 ## 🏗️ Project Architecture
 
-
+```
 backend/
-│── accounts/ # Custom user & authentication
-│── doctor/ # Doctor dashboard & logic
-│── patient/ # Patient dashboard & logic
-│── base/ # Core shared services
-│── config/ # Django settings & ASGI/WSGI
+├── accounts/     # Custom user model & authentication
+├── doctor/       # Doctor dashboard & business logic
+├── patient/      # Patient dashboard & business logic
+├── base/         # Core shared services & utilities
+└── config/       # Django settings, ASGI & WSGI config
+```
 
+---
 
-## 🐳 Run with Docker
+## 🐳 Quick Start with Docker
 
-### 1. Clone repository
+### 1. Clone the repository
+
 ```bash
 git clone https://github.com/your-username/hms.git
 cd hms
 ```
-2. Create environment file
+
+### 2. Set up environment variables
+
 ```bash
 cp .env.example .env
 ```
-3. Run containers
+
+Edit `.env` with your values:
+
+```env
+SECRET_KEY=your_secret_key
+DEBUG=True
+POSTGRES_DB=your_db_name
+POSTGRES_USER=your_db_user
+POSTGRES_PASSWORD=your_db_password
+```
+
+### 3. Build and run
+
 ```bash
 docker-compose up --build
-```bash
-⚙️ Environment Variables
-
-Create .env file:
-```bash
-SECRET_KEY=your_secret
-DEBUG=True
-POSTGRES_DB=your_db
-POSTGRES_USER=your_user
-POSTGRES_PASSWORD=your_password
 ```
 
-🌐 Nginx Setup (Production)
-Acts as reverse proxy
-Handles static/media files
-Routes traffic to Django via Gunicorn
-🧪 CI/CD
+The app will be available at `http://localhost`.
 
-This project uses GitHub Actions for:
+---
 
-Running tests
-Lint checks
-Docker build validation
-
-Workflow located at:
-```bash
-.github/workflows/ci.yml
-```
-📁 Templates
-
-Includes prebuilt UI templates:
-
-Authentication pages
-Doctor dashboard
-Patient dashboard
-Email templates
-Static landing pages
-🧑‍💻 Development Setup (Without Docker)
+## 🛠️ Local Development (Without Docker)
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-📌 Notes
-Uses custom user model (accounts.CustomUser)
-Modular app structure
-Designed for scalability and microservice transition
-📄 License
-
-This project is licensed under the MIT License.
-
-⭐ Author
-
-Built with ❤️ by Mohamad Taher Taherpoor
-
 
 ---
 
-If you want, I can next upgrade this into:
-```bash
-- 🔥 :contentReference[oaicite:0]{index=0}
-- 🚀 :contentReference[oaicite:1]{index=1}
-- 🧪 :contentReference[oaicite:2]{index=2}
-- 🌍 :contentReference[oaicite:3]{index=3}
-```bash
-Just tell me.
+## 🌐 Production — Nginx Setup
+
+Nginx is configured as a **reverse proxy** in front of Gunicorn:
+
+- Routes HTTP traffic to the Django/Gunicorn application
+- Serves static and media files directly for performance
+- Easily extendable with SSL (Let's Encrypt / Certbot)
+
+---
+
+## ⚙️ CI/CD — GitHub Actions
+
+The pipeline at `.github/workflows/ci.yml` runs automatically on every push:
+
+- ✅ Unit & integration tests
+- ✅ Lint checks (flake8 / ruff)
+- ✅ Docker image build validation
+
+---
+
+## 📁 UI Templates
+
+Pre-built templates included out of the box:
+
+- Authentication pages (login, register, password reset)
+- Doctor dashboard
+- Patient dashboard
+- Email notification templates
+- Static landing pages
+
+---
+
+## 📌 Technical Notes
+
+- Uses a **custom user model** (`accounts.CustomUser`) — set up before first migration
+- Modular app structure makes it easy to extend or extract into microservices
+- Designed with scalability in mind; ready for a microservice transition
+
+---
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE).
+
+---
+
+## 👤 Author
+
+Built with ❤️ by **Mohamad Taher Taherpoor**
