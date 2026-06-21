@@ -2,6 +2,8 @@
 
 from django.contrib.auth.base_user import BaseUserManager
 
+from .models import UserType
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -23,5 +25,6 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("user_type", UserType.ADMIN)
 
         return self.create_user(email, password, **extra_fields)

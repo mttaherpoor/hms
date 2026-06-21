@@ -6,14 +6,15 @@ from .managers import CustomUserManager
 class UserType(models.TextChoices):
     DOCTOR = "doc", "Doctor"
     PATIENT = "pat", "Patient"
-
+    ADMIN = "adm", "Admin"
+    
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True,max_length=50)
     username = models.CharField(max_length=50, null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
 
-    user_type = models.CharField(max_length=3, choices=UserType.choices)
+    user_type = models.CharField(max_length=3, choices=UserType.choices, default=UserType.PATIENT)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'user_type']
