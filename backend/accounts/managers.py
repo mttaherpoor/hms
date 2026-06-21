@@ -2,7 +2,7 @@
 
 from django.contrib.auth.base_user import BaseUserManager
 
-from .models import UserType
+from .constants import UserType
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
