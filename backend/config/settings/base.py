@@ -18,6 +18,7 @@ def get_secret(secret_name, default=None):
 
     return default
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 # ---------------- CORE ----------------
 

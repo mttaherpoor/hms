@@ -2,10 +2,7 @@ from .base import *
 
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = [h for h in env("DJANGO_ALLOWED_HOSTS", "").split(",") if h]
-
 SECRET_KEY = get_secret("django_secret_key")
-
 
 DATABASES = {
     "default": {
@@ -17,3 +14,9 @@ DATABASES = {
         "PORT": 5432,
     }
 }
+
+CSRF_TRUSTED_ORIGINS = [o for o in env("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+ALLOWED_HOSTS = [h for h in env("DJANGO_ALLOWED_HOSTS", "").split(",") if h]
