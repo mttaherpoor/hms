@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "backend/**/*.py"
+      - "backend/requirements.txt"
+      - "backend/Dockerfile"
+      - "docker-compose.yml"
+      - ".github/workflows/**"
 
 jobs:
   test:
@@ -64,6 +70,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /opt/hms
+            cd ${{ vars.DEPLOY_PATH }}
             git pull origin main
             docker compose up -d --build
